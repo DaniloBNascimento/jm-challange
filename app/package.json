@@ -1,0 +1,15 @@
+{
+  "name": "example-repo",
+  "version": "1.0.0",
+  "description": "Example repo for DevOps test",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "node index.test.js"
+  },
+  "author": "Sam Clement",
+  "license": "ISC",
+  "devDependencies": {
+    "tape": "^4.6.3"
+  }
+}
