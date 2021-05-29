@@ -1,7 +1,7 @@
 version: 2.1
 orbs:
-  aws-ecr: circleci/aws-ecr@6.7.0
-jobs:
+  aws-ecr: circleci/aws-ecr@7.0.0
+jobs: 
   plan:
     docker:
       - image: public.ecr.aws/hashicorp/terraform:latest
@@ -37,19 +37,7 @@ jobs:
             echo 'export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
             source $BASH_ENV
             terraform init -lock=false tf/
-            terraform apply -auto-approve tf/
-  
-
-aws-ecr/build-and-push-image:
-  account-url: AWS_ECR_ACCOUNT_URL
-  aws-access-key-id: AWS_ACCESS_KEY_ID
-  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
-  create-repo: false
-  dockerfile: Dockerfile
-  path: .
-  region: AWS_DEFAULT_REGION_VALUE
-  repo: app-jm
-  tag: "$CIRCLE_SHA1"        
+            terraform apply -auto-approve tf/        
 
 workflows:
   plan:
@@ -65,3 +53,17 @@ workflows:
       - aws-ecr/build-and-push-image:
           requires:
             - apply
+      - aws-ecr/build-and-push-image:
+          account-url: AWS_ECR_ACCOUNT_URL
+          aws-access-key-id: AWS_ACCESS_KEY_ID
+          aws-secret-access-key: AWS_ACCESS_KEY_ID         
+          create-repo: true
+          dockerfile: Dockerfile
+          no-output-timeout: 20m
+          path: .
+          region: AWS_DEFAULT_REGION_VALUE
+          repo: jm-app
+          skip-when-tags-exist: false
+          tag: 'latest'
+
+      
