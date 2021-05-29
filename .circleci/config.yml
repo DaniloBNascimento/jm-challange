@@ -3,7 +3,7 @@ jobs:
   plan:
     docker:
       - image: public.ecr.aws/hashicorp/terraform:latest
-    working_directory: .
+    working_directory: ./
     environment:
       BASH_ENV: /root/.bashrc
     steps:
