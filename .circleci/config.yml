@@ -40,9 +40,9 @@ jobs:
 workflows:
   plan:
     jobs:
-      - plan
-      - apply
+      - plan      
       - hold:
           type: approval
           requires:
             - plan
+      - apply
