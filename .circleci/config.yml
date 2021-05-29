@@ -1,4 +1,6 @@
 version: 2.1
+orbs:
+  aws-ecr: circleci/aws-ecr@6.7.0
 jobs:
   plan:
     docker:
@@ -37,22 +39,17 @@ jobs:
             terraform init -lock=false tf/
             terraform apply -auto-approve tf/
   
-  build_container:
-    machine:
-      image: ubuntu-2004:202010-01
-    working_directory: ~/project
-    environment:
-      BASH_ENV: ~/.bashrc
-    steps:
-      - checkout      
-      - run:
-          name: build image from Dockerfile
-          command: |
-            sudo echo 'export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}' >> $BASH_ENV
-            sudo echo 'export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION_VALUE}' >> $BASH_ENV
-            sudo echo 'export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
-            sudo source $BASH_ENV
-            sudo apt-get update -y && sudo apt-get install curl unzip -y            
+
+aws-ecr/build-and-push-image:
+  account-url: AWS_ECR_ACCOUNT_URL
+  aws-access-key-id: AWS_ACCESS_KEY_ID
+  aws-secret-access-key: AWS_SECRET_ACCESS_KEY
+  create-repo: false
+  dockerfile: Dockerfile
+  path: .
+  region: AWS_DEFAULT_REGION_VALUE
+  repo: app-jm
+  tag: "$CIRCLE_SHA1"        
 
 workflows:
   plan:
@@ -65,6 +62,6 @@ workflows:
       - apply:
           requires:
             - approve_apply
-      - build_container:
+      - aws-ecr/build-and-push-image:
           requires:
             - apply
