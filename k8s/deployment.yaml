@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app-jm-deployment
+  namespace: app-jm
+  labels:
+    app: app-jm
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: app-jm
+  template:
+    metadata:
+      labels:
+        app: app-jm
+    spec:
+      containers:
+      - name: app-jm
+        image: 986052115073.dkr.ecr.us-east-2.amazonaws.com/app-jm:latest
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "1Gi"
+            cpu: "500m"
+        ports:
+        - containerPort: 3000
+        imagePullPolicy: Always
