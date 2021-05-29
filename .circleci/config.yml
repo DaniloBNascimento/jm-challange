@@ -40,6 +40,9 @@ jobs:
   build_image_docker:
     docker:
       - image: ubuntu:latest
+    working_directory: ~/project
+    environment:
+      BASH_ENV: /root/.bashrc
     steps:
       - checkout          
       - setup_remote_docker:
@@ -51,10 +54,20 @@ jobs:
           curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
           echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
           apt-get update -y
-          apt-get install docker-ce-cli -y
+          apt-get install docker-ce-cli -y          
+          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+          unzip awscliv2.zip
+          ./aws/install -i /usr/local/aws-cli -b /usr/local/bin
+          aws --version
+          touch $BASH_ENV            
+          echo 'export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}' >> $BASH_ENV
+          echo 'export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION_VALUE}' >> $BASH_ENV
+          echo 'export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
+          source $BASH_ENV
+          aws ecr get-login-password --region us-east-2 | docker login --username AWS --password-stdin 986052115073.dkr.ecr.us-east-2.amazonaws.com
           docker build -t app-jm .
           docker tag app-jm:latest 986052115073.dkr.ecr.us-east-2.amazonaws.com/app-jm:latest
-              
+          docker push 986052115073.dkr.ecr.us-east-2.amazonaws.com/app-jm:latest                    
 
 workflows:
   plan:
