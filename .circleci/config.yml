@@ -41,7 +41,7 @@ workflows:
   plan:
     jobs:
       - plan      
-      - hold:
+      - approve_apply:
           type: approval
           requires:
             - plan        
