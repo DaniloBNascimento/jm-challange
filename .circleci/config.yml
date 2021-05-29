@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 
 jobs:
   plan:
@@ -10,8 +10,8 @@ jobs:
       - run:
           name: terraform init & plan
           command: |
-            terraform init
-            terraform plan
+            terraform init tf/
+            terraform plan tf/
       - persist_to_workspace:
           root: .
           paths:
