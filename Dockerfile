@@ -9,7 +9,7 @@ COPY /app/package*.json ./
 
 RUN npm install -g npm@7.15.0 && npm install
 
-COPY /app/index.js ./
+COPY /app/*.js ./
 
 EXPOSE 3000
 CMD [ "node", "index.js" ]
