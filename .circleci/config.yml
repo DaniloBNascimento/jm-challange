@@ -36,8 +36,26 @@ jobs:
             source $BASH_ENV
             terraform init -lock=false tf/
             terraform apply -auto-approve tf/
-  
-  build_image_docker:
+
+  test_application:
+    docker:
+      - image: ubuntu:latest
+    steps:
+      - checkout
+      - setup_remote_docker:
+          version: 19.03.13
+          docker_layer_caching: false
+      - run: |
+          apt-get update -y && apt-get install curl unzip -y
+          apt-get install apt-transport-https ca-certificates curl gnupg lsb-release -y
+          curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+          echo "deb [arch=amd64 signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
+          apt-get update -y
+          apt-get install docker-ce-cli -y
+          docker build -t app-jm .
+          docker run -it --rm app-jm node index.test.js
+
+  build_and_push_image_docker:
     docker:
       - image: ubuntu:latest
     working_directory: ~/project
@@ -73,13 +91,20 @@ workflows:
   plan:
     jobs:
       - plan      
-      - approve_apply:
+      - approve_apply_terraform:
           type: approval
           requires:
             - plan        
       - apply:
           requires:
-            - approve_apply
-      - build_image_docker:
+            - approve_apply_terraform
+      - test_application:
           requires:
             - apply
+      - approve_test:
+          type: approval
+          requires:
+            - test_application
+      - build_and_push_image_docker:
+          requires:
+            - approve_test
