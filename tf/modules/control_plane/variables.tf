@@ -3,7 +3,7 @@ variable "cluster_name" {
 }
 
 variable "kubernetes_version" {
-  default = "1.18"
+  default = "1.20"
 }
 
 variable "private_subnet_1a" {
