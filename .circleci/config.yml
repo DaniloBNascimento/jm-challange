@@ -113,15 +113,15 @@ jobs:
             echo 'export AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}' >> $BASH_ENV
             echo 'export AWS_DEFAULT_REGION=${AWS_DEFAULT_REGION_VALUE}' >> $BASH_ENV
             echo 'export AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}' >> $BASH_ENV
-            
-            echo 'RESOURCES=("namespace.yaml" "deployment.yaml" "service.yaml" 
-            "nginx_ingress_deployment.yaml" "ingress.yaml")' >> $BASH_ENV
 
             source $BASH_ENV
             
             aws eks --region us-east-2 update-kubeconfig --name eks-jm
-
-            for RESOURCE in ${RESOURCES[@]}; do kubectl apply -f k8s/$RESOURCE; done
+            kubectl apply -f tf/namespace.yaml
+            kubectl apply -f tf/deployment.yaml
+            kubectl apply -f tf/service.yaml
+            kubectl apply -f tf/nginx_ingress_deployment.yaml
+            kubectl apply -f tf/ingress.yaml
 
 workflows:
   plan:
