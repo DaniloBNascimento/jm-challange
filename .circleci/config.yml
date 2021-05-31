@@ -117,11 +117,11 @@ jobs:
             source $BASH_ENV
             
             aws eks --region us-east-2 update-kubeconfig --name eks-jm
-            kubectl apply -f tf/namespace.yaml
-            kubectl apply -f tf/deployment.yaml
-            kubectl apply -f tf/service.yaml
-            kubectl apply -f tf/nginx_ingress_deployment.yaml
-            kubectl apply -f tf/ingress.yaml
+            kubectl apply -f k8s/namespace.yaml
+            kubectl apply -f k8s/deployment.yaml
+            kubectl apply -f k8s/service.yaml
+            kubectl apply -f k8s/nginx_ingress_deployment.yaml
+            kubectl apply -f k8s/ingress.yaml
 
 workflows:
   plan:
