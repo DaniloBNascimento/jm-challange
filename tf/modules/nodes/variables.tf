@@ -3,15 +3,15 @@ variable "cluster_name" {
 }
 
 variable "desired_size" {
-  default = 2
+  default = 4
 }
 
 variable "max_size" {
-  default = 2
+  default = 4
 }
 
 variable "min_size" {
-  default = 2
+  default = 4
 }
 
 variable "private_subnet_1a" {
