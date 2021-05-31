@@ -25,7 +25,7 @@ resource "aws_subnet" "eks_subnet_private_az_1b" {
   tags = {
     Name = format("%s-subnet-private-az-1b", var.cluster_name)
     "kubernetes.io/cluster/${var.cluster_name}" = "shared"
-    "kubernetes.io/role/internal-elb" = "1"
+    "kubernetes.io/role/internal-elb" = "1"    
   }
   depends_on = [ aws_vpc.eks_vpc ]
 }
