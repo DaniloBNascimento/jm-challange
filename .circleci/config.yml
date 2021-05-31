@@ -96,7 +96,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: terraform init and plan
+          name: app deployment in cluster
           command: |
             apt-get update -y && apt-get install curl unzip -y
             apt-get install -y apt-transport-https ca-certificates
@@ -121,10 +121,7 @@ jobs:
             
             aws eks --region us-east-2 update-kubeconfig --name eks-jm
 
-            for RESOURCE in ${RESOURCES[@]}
-            do
-              kubectl apply -f k8s/$RESOURCE
-            done
+            for RESOURCE in ${RESOURCES[@]}; do kubectl apply -f k8s/$RESOURCE; done
 
 workflows:
   plan:
