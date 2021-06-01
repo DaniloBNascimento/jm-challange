@@ -24,7 +24,8 @@ jobs:
     working_directory: ~/project
     environment:
       BASH_ENV: /root/.bashrc
-    steps:      
+    steps:
+      - checkout
       - run:
           name: terraform init and plan
           command: |
@@ -39,7 +40,8 @@ jobs:
   test_application:
     docker:
       - image: ubuntu:latest
-    steps:      
+    steps:
+      - checkout
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: false
@@ -59,7 +61,8 @@ jobs:
     working_directory: ~/project
     environment:
       BASH_ENV: /root/.bashrc
-    steps:               
+    steps:
+      - checkout          
       - setup_remote_docker:
           version: 19.03.13
           docker_layer_caching: false
@@ -90,7 +93,8 @@ jobs:
     working_directory:  ~/project
     environment:
       BASH_ENV: /root/.bashrc
-    steps:      
+    steps:
+      - checkout
       - run:
           name: app deployment in cluster
           command: |
