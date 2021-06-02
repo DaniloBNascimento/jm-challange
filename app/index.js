@@ -2,7 +2,7 @@ var os = require('os')
 var http = require('http')
 
 function handleRequest(req, res) {
-  res.write('Hello World! App in Pod: ' + os.hostname())
+  res.write('Hello World!! App in Pod: ' + os.hostname())
   res.end()
 }
 
